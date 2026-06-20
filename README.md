@@ -1,4 +1,4 @@
-# 🎓 DỰ ÁN TỐT NGHIỆP - NGÀNH ỨNG DỤNG PHẦN MỀM (JAVA)
+# 🎓 DỰ ÁN TỐT NGHIỆP - NGÀNH PHÁT TRIỂN PHẦN MỀM (JAVA)
 ### 📑 Mã môn học: PRO230
 
 ---
