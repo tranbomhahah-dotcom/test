@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Hostel Manager - Quản Lý Hợp Đồng</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #0066cc;
+            --orange-theme: #fd7e14;
+            --orange-light: #fff4ec;
+            --bg-body: #f4f6f9;
+            --border-color: #e0e0e0;
+            --text-main: #333333;
+            --success: #198754;
+            --danger: #dc3545;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- HEADER CHUNG --- */
+        .top-header {
+            background-color: var(--primary-blue);
+            color: white;
+            height: 56px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .header-brand {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar-circle {
+            width: 32px;
+            height: 32px;
+            background: #ccc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* --- LAYOUT THÂN TRANG --- */
+        .wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: white;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 15px 0;
+        }
+
+        .menu-list li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .menu-list li.active a {
+            background-color: #f0f4f8;
+            color: var(--primary-blue);
+            font-weight: 500;
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 16px;
+        }
+
+        .menu-list li a i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .page-navigation {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .page-navigation span {
+            color: #000;
+            font-weight: 500;
+        }
+
+        /* --- BỐ CỤC 2 CỘT LINH HOẠT --- */
+        .contract-manager-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1.4fr;
+            gap: 20px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--orange-theme);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Thanh tìm kiếm bên trái */
+        .toolbar-left {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 6px 12px 6px 32px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        /* Nút bấm chuẩn cam */
+        .btn-orange {
+            background-color: var(--orange-theme);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Bảng danh sách */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .custom-table th {
+            background-color: #f8f9fa;
+            padding: 10px;
+            font-weight: 500;
+            color: #555;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .custom-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+        .status-valid { background-color: #eafaf1; color: var(--success); }
+        .status-expired { background-color: #fce8e6; color: var(--danger); }
+
+        .action-cell i {
+            margin-right: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .action-cell .fa-pen { color: var(--primary-blue); }
+        .action-cell .fa-file-invoice { color: var(--success); }
+
+        /* --- FORM THÊM / SỬA HỢP ĐỒNG --- */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+            outline: none;
+            background-color: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--orange-theme);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="header-brand">
+            <i class="fa-solid fa-house-user"></i>
+            <span>HỆ THỐNG QUẢN LÝ NHÀ TRỌ</span>
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <div class="avatar-circle">A</div>
+                <span>Admin <i class="fa-solid fa-caret-down" style="font-size: 11px;"></i></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="wrapper">
+        <aside class="sidebar">
+            <ul class="menu-list">
+                <li><a href="#"><i class="fa-solid fa-chart-pie"></i> Trang chủ</a></li>
+                <li><a href="#"><i class="fa-solid fa-users"></i> Quản lý người dùng</a></li>
+                <li><a href="#"><i class="fa-solid fa-house"></i> Quản lý nhà trọ</a></li>
+                <li class="active"><a href="#"><i class="fa-solid fa-file-contract"></i> Quản lý hợp đồng</a></li>
+                <li><a href="#"><i class="fa-solid fa-credit-card"></i> Quản lý thanh toán</a></li>
+                <li><a href="#"><i class="fa-solid fa-chart-line"></i> Báo cáo - thống kê</a></li>
+                <li><a href="#"><i class="fa-solid fa-gear"></i> Cài đặt hệ thống</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-navigation">Quản lý hợp đồng &gt; <span>Danh sách & Thiết lập hợp đồng</span></div>
+
+            <div class="contract-manager-grid">
+                
+                <div class="content-card">
+                    <div class="card-title">Danh sách hợp đồng thuê</div>
+                    
+                    <div class="toolbar-left">
+                        <div class="search-wrapper">
+                            <i class="fa fa-search"></i>
+                            <input type="text" placeholder="Tìm kiếm mã HD, tên khách, số phòng...">
+                        </div>
+                        <button class="btn-orange" style="background-color: #6c757d;"><i class="fa-solid fa-filter"></i> Lọc</button>
+                    </div>
+
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Mã HD</th>
+                                <th>Khách thuê</th>
+                                <th>Phòng</th>
+                                <th>Thời hạn</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background-color: var(--orange-light);">
+                                <td style="font-weight: 500; color: var(--orange-theme);">HD00123</td>
+                                <td style="font-weight: 500;">Nguyễn Văn A</td>
+                                <td>P.101</td>
+                                <td>01/06/26 - 01/06/27</td>
+                                <td><span class="status-badge status-valid">Hiệu lực</span></td>
+                                <td class="action-cell">
+                                    <i class="fa-regular fa-pen-to-square" title="Chỉnh sửa thông tin hợp đồng này (UC-6.2)"></i>
+                                    <i class="fa-solid fa-file-invoice" title="Xem chi tiết/Thanh lý"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500; color: var(--orange-theme);">HD00124</td>
+                                <td style="font-weight: 500;">Trần Thị B</td>
+                                <td>P.202</td>
+                                <td>15/01/26 - 15/07/26</td>
+                                <td><span class="status-badge status-valid">Hiệu lực</span></td>
+                                <td class="action-cell">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                    <i class="fa-solid fa-file-invoice"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500; color: var(--orange-theme);">HD00120</td>
+                                <td style="font-weight: 500;">Lê Văn C</td>
+                                <td>P.305</td>
+                                <td>01/05/25 - 01/05/26</td>
+                                <td><span class="status-badge status-expired">Thanh lý</span></td>
+                                <td class="action-cell">
+                                    <i class="fa-regular fa-pen-to-square" style="color:#ccc; cursor:not-allowed;" title="Hợp đồng đã thanh lý không thể sửa"></i>
+                                    <i class="fa-solid fa-file-invoice"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-title">
+                        <span id="form-mode-title">Cập nhật thông tin hợp đồng</span>
+                        <button class="btn-orange" style="padding: 4px 8px; font-size: 11px;" onclick="document.getElementById('form-mode-title').innerText='Tạo mới hợp đồng trọ';"><i class="fa fa-plus"></i> Tạo mới mới</button>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Mã hợp đồng *</label>
+                            <input type="text" class="form-input" value="HD00123">
+                        </div>
+                        <div class="form-group">
+                            <label>Chọn Phòng trọ (Chỉ hiện phòng Trống) *</label>
+                            <select class="form-select">
+                                <option>P.101 (Đang chọn)</option>
+                                <option>P.102 - Phòng trống</option>
+                                <option>P.203 - Phòng trống</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Khách hàng ký hợp đồng *</label>
+                            <select class="form-select">
+                                <option>Nguyễn Văn A</option>
+                                <option>Trần Thị B</option>
+                                <option>Thêm khách hàng mới +</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Số tiền đặt cọc (VND) *</label>
+                            <input type="text" class="form-input" value="2.500.000">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ngày bắt đầu thuê *</label>
+                            <input type="date" class="form-input" value="2026-06-01">
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày kết thúc thuê *</label>
+                            <input type="date" class="form-input" value="2027-06-01">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Giá thuê định kỳ (VND/Tháng) *</label>
+                            <input type="text" class="form-input" value="2.500.000">
+                        </div>
+                        <div class="form-group">
+                            <label>Kỳ hạn thanh toán</label>
+                            <select class="form-select">
+                                <option>Thanh toán vào mùng 5 hàng tháng</option>
+                                <option>Thanh toán vào cuối tháng</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Điều khoản bổ sung / Ghi chú</label>
+                        <input type="text" class="form-input" value="Khách đóng tiền cọc trước 1 tháng, hoàn trả khi thanh lý đúng hạn.">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Đính kèm file scan hợp đồng giấy (PDF, PNG)</label>
+                        <input type="file" class="form-input" style="padding: 4px;">
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px;">
+                        <button class="btn-orange" style="background: #ccc; color: #333;" onclick="location.reload();">Hủy thay đổi</button>
+                        <button class="btn-orange"><i class="fa-regular fa-floppy-disk"></i> Lưu hợp đồng</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
